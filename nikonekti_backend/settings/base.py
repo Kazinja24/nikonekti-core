@@ -12,11 +12,30 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'properties',
+    'viewings',
 
     'rest_framework',
 ]
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+AFRICASTALKING_USERNAME = os.getenv("AT_USERNAME")
+AFRICASTALKING_API_KEY = os.getenv("AT_API_KEY")
+AFRICASTALKING_SENDER_ID = os.getenv("AT_SENDER_ID")
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
