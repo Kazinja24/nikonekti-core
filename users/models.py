@@ -1,9 +1,30 @@
-from django.db import models
-
-# Create your models here.
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import BaseUserManager
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, role=None, **extra_fields):
+        if not email:
+            raise ValueError("Email required")
+
+        user = self.model(
+            email=self.normalize_email(email),
+            role=role,
+            **extra_fields,
+        )
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password):
+        user = self.create_user(email, password, role="ADMIN")
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Role(models.TextChoices):
@@ -24,24 +45,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-
-from django.contrib.auth.models import BaseUserManager
-
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, role=None):
-        if not email:
-            raise ValueError("Email required")
-
-        user = self.model(email=self.normalize_email(email), role=role)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password):
-        user = self.create_user(email, password, role="ADMIN")
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
-        return user
-
-objects = UserManager()
+    objects = UserManager()

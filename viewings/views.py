@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from core.services.sms_service import send_sms
+from nikonekti_backend.settings.services.sms_services import send_sms
 
 from django.shortcuts import render
 
@@ -10,10 +10,12 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from .models import Viewing
 from .serializers import ViewingSerializer
-from core.permissions import IsTenant
+from nikonekti_backend.permissions import IsTenant
+from users.permissions import IsTenant, IsAgent, IsLandlord
 
 
 class ViewingViewSet(ModelViewSet):
+    queryset = Viewing.objects.all()
     serializer_class = ViewingSerializer
     permission_classes = [IsAuthenticated]
 
@@ -74,3 +76,11 @@ class ViewingViewSet(ModelViewSet):
         )
 
         return Response({"message": "Viewing rejected"})
+
+
+def get_permissions(self):
+    if self.action == 'create':
+        return [IsTenant()]
+    elif self.action in ['approve', 'reject']:
+        return [IsAgent() | IsLandlord()]
+    return [IsAuthenticated()]

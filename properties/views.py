@@ -5,7 +5,10 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from .models import Property
 from .serializers import PropertySerializer
-from core.permissions import IsLandlord
+from nikonekti_backend.permissions import IsLandlord
+from users.permissions import IsLandlord, IsAdmin
+from rest_framework import viewsets
+
 
 
 class PropertyViewSet(ModelViewSet):
@@ -22,3 +25,16 @@ class PropertyViewSet(ModelViewSet):
         if self.request.user.role == 'landlord':
             return Property.objects.filter(owner=self.request.user)
         return Property.objects.filter(status='available')
+
+
+
+class PropertyViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get_permissions(self):
+        if self.action in ['create']:
+            return [IsLandlord()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsLandlord() | IsAdmin()]
+        return [IsAuthenticated()]
