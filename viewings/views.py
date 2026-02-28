@@ -1,16 +1,30 @@
 from rest_framework.decorators import action
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
-from applications.models import RentalApplication
 from nikonekti_backend.settings.services.sms_services import send_sms
 from users.permissions import IsTenant
 from .models import Viewing
 from .serializers import ViewingSerializer
 
 
-class ViewingViewSet(ModelViewSet):
+@extend_schema_view(
+    list=extend_schema(tags=["Viewings - Tenant/Landlord"]),
+    retrieve=extend_schema(tags=["Viewings - Tenant/Landlord"]),
+    create=extend_schema(tags=["Viewings - Tenant"]),
+    approve=extend_schema(tags=["Viewings - Landlord"]),
+    reject=extend_schema(tags=["Viewings - Landlord"]),
+    complete=extend_schema(tags=["Viewings - Landlord"]),
+)
+class ViewingViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    GenericViewSet,
+):
     queryset = Viewing.objects.all()
     serializer_class = ViewingSerializer
     permission_classes = [IsAuthenticated]
@@ -40,6 +54,9 @@ class ViewingViewSet(ModelViewSet):
 
         if viewing.status != "pending":
             return Response({"error": "Already processed"}, status=400)
+
+        if not viewing.application or viewing.application.status != "approved":
+            return Response({"error": "Viewing is locked because application is not approved."}, status=400)
 
         viewing.status = "approved"
         viewing.save(update_fields=["status"])
@@ -76,24 +93,13 @@ class ViewingViewSet(ModelViewSet):
         if request.user != viewing.property.owner:
             return Response({"error": "Only landlord can complete viewing"}, status=403)
 
-        outcome = str(request.data.get("outcome", "")).upper()
-        if outcome not in {"ACCEPTED", "REJECTED"}:
-            return Response({"error": "Outcome must be ACCEPTED or REJECTED"}, status=400)
+        if viewing.status not in {"approved", "pending"}:
+            return Response({"error": "Only pending or approved viewings can be completed"}, status=400)
 
-        application = RentalApplication.objects.filter(
-            tenant=viewing.tenant,
-            property=viewing.property,
-            viewing=viewing,
-            status="VIEWING_SCHEDULED",
-        ).first()
+        if not viewing.application or viewing.application.status != "approved":
+            return Response({"error": "Viewing is locked because application is not approved."}, status=400)
 
-        if not application:
-            return Response({"error": "No viewing-scheduled application linked to this viewing"}, status=400)
-
-        viewing.status = "completed" if outcome == "ACCEPTED" else "rejected"
+        viewing.status = "completed"
         viewing.save(update_fields=["status"])
 
-        application.status = outcome
-        application.save(update_fields=["status"])
-
-        return Response({"message": f"Viewing marked as {outcome.lower()}"})
+        return Response({"message": "Viewing marked as completed"})

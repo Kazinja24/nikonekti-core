@@ -1,0 +1,97 @@
+{% extends "admin/base_site.html" %}
+{% load i18n log %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="nk-admin-layout">
+  <aside class="nk-sidebar">
+    {% for app in app_list %}
+    <section class="nk-sidebar-app">
+      <h3>{{ app.name }}</h3>
+      {% for model in app.models %}
+      <div class="nk-sidebar-actions">
+        {% if model.add_url %}
+        <a class="nk-action-btn" href="{{ model.add_url }}">+ Add</a>
+        {% endif %}
+        {% if model.admin_url %}
+        <a class="nk-action-btn" href="{{ model.admin_url }}">Change</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </aside>
+
+  <main class="nk-main">
+    <section class="nk-card nk-recent-actions">
+      <h2>Recent Actions</h2>
+      {% get_admin_log 6 as admin_log for_user user %}
+      {% if not admin_log %}
+      <p class="nk-muted">No recent actions.</p>
+      {% else %}
+      <ul class="nk-list">
+        {% for entry in admin_log %}
+        <li>
+          <span class="nk-dot"></span>
+          <div>
+            <p>{{ entry.object_repr }}</p>
+            <small>{{ entry.action_time|timesince }} ago</small>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </section>
+
+    <section class="nk-cards-grid">
+      {% for app in app_list %}
+      <article class="nk-card nk-app-card">
+        <div class="nk-card-header">
+          <h2>Select {{ app.name|lower }} to change</h2>
+          {% for model in app.models %}
+            {% if model.add_url %}
+            <a class="nk-pill-btn" href="{{ model.add_url }}">Add {{ model.name }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="nk-search-row">
+          <input type="text" placeholder="Search" aria-label="Search {{ app.name }}">
+        </div>
+
+        <table class="nk-table">
+          <thead>
+            <tr>
+              <th>{{ app.name|slice:":12" }}</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for model in app.models %}
+            <tr>
+              <td>{{ model.name }}</td>
+              <td>
+                <div class="nk-table-actions">
+                  {% if model.admin_url %}
+                  <a href="{{ model.admin_url }}">Change</a>
+                  {% endif %}
+                  {% if model.add_url %}
+                  <a href="{{ model.add_url }}">Add</a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="2">No models.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+</div>
+{% endblock %}

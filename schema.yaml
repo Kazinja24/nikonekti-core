@@ -1,0 +1,3181 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/applications/:
+    get:
+      operationId: api_applications_list
+      tags:
+      - Applications - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RentalApplication'
+          description: ''
+    post:
+      operationId: api_applications_create
+      tags:
+      - Applications - Tenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/{id}/:
+    get:
+      operationId: api_applications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rental application.
+        required: true
+      tags:
+      - Applications - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/{id}/approve/:
+    post:
+      operationId: api_applications_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rental application.
+        required: true
+      tags:
+      - Applications - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/{id}/expire/:
+    post:
+      operationId: api_applications_expire_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rental application.
+        required: true
+      tags:
+      - Applications - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/{id}/reject/:
+    post:
+      operationId: api_applications_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rental application.
+        required: true
+      tags:
+      - Applications - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RentalApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/{id}/tenant-profile/:
+    get:
+      operationId: api_applications_tenant_profile_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rental application.
+        required: true
+      tags:
+      - Applications - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/can_message/:
+    get:
+      operationId: api_applications_can_message_retrieve
+      tags:
+      - Applications - Tenant
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/can_request_viewing/:
+    get:
+      operationId: api_applications_can_request_viewing_retrieve
+      tags:
+      - Applications - Tenant
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/applications/property/{property_id}/:
+    get:
+      operationId: api_applications_property_retrieve
+      parameters:
+      - in: path
+        name: property_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Applications - Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApplication'
+          description: ''
+  /api/auth/login/:
+    post:
+      operationId: api_auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTokenObtainPair'
+          description: ''
+  /api/auth/profile/:
+    get:
+      operationId: api_auth_profile_retrieve
+      tags:
+      - Auth - Authenticated
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: api_auth_register_create
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+          description: ''
+  /api/auth/token/refresh/:
+    post:
+      operationId: api_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/chat/conversations/:
+    get:
+      operationId: api_chat_conversations_list
+      tags:
+      - Messaging - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conversation'
+          description: ''
+  /api/chat/conversations/{id}/:
+    get:
+      operationId: api_chat_conversations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this conversation.
+        required: true
+      tags:
+      - Messaging - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+          description: ''
+  /api/chat/conversations/open/:
+    post:
+      operationId: api_chat_conversations_open_create
+      tags:
+      - Messaging - Tenant/Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenConversation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OpenConversation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OpenConversation'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenConversation'
+          description: ''
+  /api/chat/messages/:
+    get:
+      operationId: api_chat_messages_list
+      tags:
+      - Messaging - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+          description: ''
+    post:
+      operationId: api_chat_messages_create
+      tags:
+      - Messaging - Tenant/Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Message'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/landlord-verifications/:
+    get:
+      operationId: api_landlord_verifications_list
+      tags:
+      - Verification - Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LandlordVerification'
+          description: ''
+  /api/landlord-verifications/{id}/:
+    get:
+      operationId: api_landlord_verifications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this landlord verification.
+        required: true
+      tags:
+      - Verification - Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LandlordVerification'
+          description: ''
+  /api/landlord-verifications/{id}/approve/:
+    post:
+      operationId: api_landlord_verifications_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this landlord verification.
+        required: true
+      tags:
+      - Verification - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LandlordVerificationReview'
+          description: ''
+  /api/landlord-verifications/{id}/reject/:
+    post:
+      operationId: api_landlord_verifications_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this landlord verification.
+        required: true
+      tags:
+      - Verification - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LandlordVerificationReview'
+          description: ''
+  /api/landlord-verifications/submit/:
+    post:
+      operationId: api_landlord_verifications_submit_create
+      tags:
+      - Verification - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LandlordVerificationSubmit'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LandlordVerificationSubmit'
+          description: ''
+  /api/leases/:
+    get:
+      operationId: api_leases_list
+      tags:
+      - Leases - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lease'
+          description: ''
+    post:
+      operationId: api_leases_create
+      tags:
+      - Leases - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/:
+    get:
+      operationId: api_leases_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/activate/:
+    post:
+      operationId: api_leases_activate_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/close/:
+    post:
+      operationId: api_leases_close_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/contract/:
+    get:
+      operationId: api_leases_contract_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/sign/:
+    post:
+      operationId: api_leases_sign_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Tenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/terminate/:
+    post:
+      operationId: api_leases_terminate_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/leases/{id}/upload-contract/:
+    post:
+      operationId: api_leases_upload_contract_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this lease.
+        required: true
+      tags:
+      - Leases - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lease'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lease'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lease'
+          description: ''
+  /api/login/:
+    post:
+      operationId: api_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTokenObtainPair'
+          description: ''
+  /api/payments/:
+    get:
+      operationId: api_payments_list
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+          description: ''
+    post:
+      operationId: api_payments_create
+      tags:
+      - Payments - Tenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Payment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/payments/{id}/:
+    get:
+      operationId: api_payments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this payment.
+        required: true
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/payments/invoices/:
+    get:
+      operationId: api_payments_invoices_list
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+          description: ''
+  /api/payments/invoices/{id}/:
+    get:
+      operationId: api_payments_invoices_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this rent invoice.
+        required: true
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: ''
+  /api/payments/listing-intents/:
+    get:
+      operationId: api_payments_listing_intents_list
+      tags:
+      - Listings - Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListingPaymentIntent'
+          description: ''
+    post:
+      operationId: api_payments_listing_intents_create
+      tags:
+      - Listings - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntentCreate'
+          description: ''
+  /api/payments/listing-intents/{id}/:
+    get:
+      operationId: api_payments_listing_intents_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this listing payment intent.
+        required: true
+      tags:
+      - Listings - Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntent'
+          description: ''
+  /api/payments/listing-intents/{id}/confirm/:
+    post:
+      operationId: api_payments_listing_intents_confirm_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this listing payment intent.
+        required: true
+      tags:
+      - Listings - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntentReview'
+          description: ''
+  /api/payments/listing-intents/{id}/override/:
+    post:
+      operationId: api_payments_listing_intents_override_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this listing payment intent.
+        required: true
+      tags:
+      - Listings - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntentReview'
+          description: ''
+  /api/payments/listing-intents/{id}/reject/:
+    post:
+      operationId: api_payments_listing_intents_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this listing payment intent.
+        required: true
+      tags:
+      - Listings - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntentReview'
+          description: ''
+  /api/payments/listing-intents/{id}/request_confirmation/:
+    post:
+      operationId: api_payments_listing_intents_request_confirmation_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this listing payment intent.
+        required: true
+      tags:
+      - Listings - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentRequestConfirmation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentRequestConfirmation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListingPaymentIntentRequestConfirmation'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPaymentIntentRequestConfirmation'
+          description: ''
+  /api/payments/listing-plans/:
+    get:
+      operationId: api_payments_listing_plans_list
+      tags:
+      - Listings - Authenticated
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListingPlan'
+          description: ''
+  /api/payments/listing-plans/{id}/:
+    get:
+      operationId: api_payments_listing_plans_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this listing plan.
+        required: true
+      tags:
+      - Listings - Authenticated
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingPlan'
+          description: ''
+  /api/payments/pay/:
+    get:
+      operationId: api_payments_pay_list
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+          description: ''
+    post:
+      operationId: api_payments_pay_create
+      tags:
+      - Payments - Tenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Payment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Payment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/payments/pay/{id}/:
+    get:
+      operationId: api_payments_pay_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this payment.
+        required: true
+      tags:
+      - Payments - Tenant/Landlord/Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/properties/:
+    get:
+      operationId: api_properties_list
+      tags:
+      - Properties - Public
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+          description: ''
+    post:
+      operationId: api_properties_create
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/:
+    get:
+      operationId: api_properties_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Public
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    put:
+      operationId: api_properties_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    patch:
+      operationId: api_properties_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProperty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProperty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProperty'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    delete:
+      operationId: api_properties_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/properties/{id}/approve_verification/:
+    post:
+      operationId: api_properties_approve_verification_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Verification - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/delete-image/{image_id}/:
+    delete:
+      operationId: api_properties_delete_image_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      - in: path
+        name: image_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Properties - Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/properties/{id}/publish/:
+    post:
+      operationId: api_properties_publish_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/reject_verification/:
+    post:
+      operationId: api_properties_reject_verification_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Verification - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/reorder_images/:
+    post:
+      operationId: api_properties_reorder_images_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/set-cover/{image_id}/:
+    post:
+      operationId: api_properties_set_cover_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      - in: path
+        name: image_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/submit_ownership_document/:
+    post:
+      operationId: api_properties_submit_ownership_document_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Verification - Landlord
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/unpublish/:
+    post:
+      operationId: api_properties_unpublish_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/upload_image/:
+    post:
+      operationId: api_properties_upload_image_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/properties/{id}/upload_images/:
+    post:
+      operationId: api_properties_upload_images_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property.
+        required: true
+      tags:
+      - Properties - Landlord
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - ht
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/users/profile/:
+    get:
+      operationId: api_users_profile_retrieve
+      tags:
+      - Auth - Authenticated
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/users/register/:
+    post:
+      operationId: api_users_register_create
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+          description: ''
+  /api/viewings/:
+    get:
+      operationId: api_viewings_list
+      tags:
+      - Viewings - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Viewing'
+          description: ''
+    post:
+      operationId: api_viewings_create
+      tags:
+      - Viewings - Tenant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viewing'
+          description: ''
+  /api/viewings/{id}/:
+    get:
+      operationId: api_viewings_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this viewing.
+        required: true
+      tags:
+      - Viewings - Tenant/Landlord
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viewing'
+          description: ''
+  /api/viewings/{id}/approve/:
+    post:
+      operationId: api_viewings_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this viewing.
+        required: true
+      tags:
+      - Viewings - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viewing'
+          description: ''
+  /api/viewings/{id}/complete/:
+    post:
+      operationId: api_viewings_complete_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this viewing.
+        required: true
+      tags:
+      - Viewings - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viewing'
+          description: ''
+  /api/viewings/{id}/reject/:
+    post:
+      operationId: api_viewings_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this viewing.
+        required: true
+      tags:
+      - Viewings - Landlord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Viewing'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viewing'
+          description: ''
+  /login/:
+    post:
+      operationId: login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTokenObtainPair'
+          description: ''
+  /users/profile/:
+    get:
+      operationId: users_profile_retrieve
+      tags:
+      - Auth - Authenticated
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+  /users/register/:
+    post:
+      operationId: users_register_create
+      tags:
+      - Auth - Public
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+          description: ''
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserPublic'
+      required:
+      - access
+      - refresh
+      - user
+    CodeEnum:
+      enum:
+      - BASIC
+      - FEATURED
+      type: string
+      description: |-
+        * `BASIC` - Basic
+        * `FEATURED` - Featured
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+          readOnly: true
+        property_id:
+          type: integer
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        tenant_id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        landlord_id:
+          type: string
+          format: uuid
+          readOnly: true
+        landlord_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_message_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - application_id
+      - created_at
+      - id
+      - landlord_id
+      - landlord_name
+      - last_message_at
+      - property_id
+      - property_title
+      - tenant_id
+      - tenant_name
+    EmailTokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        landlord_name:
+          type: string
+          readOnly: true
+        month:
+          type: string
+          format: date
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        due_date:
+          type: string
+          format: date
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/InvoiceStatusEnum'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        lease:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - amount
+      - created_at
+      - due_date
+      - id
+      - landlord_name
+      - lease
+      - month
+      - property_title
+      - status
+      - tenant_name
+    InvoiceStatusEnum:
+      enum:
+      - PENDING
+      - PAID
+      - OVERDUE
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `PAID` - Paid
+        * `OVERDUE` - Overdue
+    LandlordVerification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        landlord_id:
+          type: string
+          format: uuid
+          readOnly: true
+        landlord_email:
+          type: string
+          format: email
+          readOnly: true
+        identity_document:
+          type: string
+          format: uri
+        landlord_supporting_document:
+          type: string
+          format: uri
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusE94Enum'
+          readOnly: true
+        review_notes:
+          type: string
+          readOnly: true
+        reviewed_by_id:
+          type: string
+          format: uuid
+          readOnly: true
+        reviewed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        submitted_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - identity_document
+      - landlord_email
+      - landlord_id
+      - landlord_supporting_document
+      - review_notes
+      - reviewed_at
+      - reviewed_by_id
+      - status
+      - submitted_at
+      - updated_at
+    LandlordVerificationReview:
+      type: object
+      properties:
+        review_notes:
+          type: string
+    LandlordVerificationSubmit:
+      type: object
+      properties:
+        identity_document:
+          type: string
+          format: uri
+        landlord_supporting_document:
+          type: string
+          format: uri
+      required:
+      - identity_document
+      - landlord_supporting_document
+    Lease:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        monthly_rent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        security_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        status:
+          allOf:
+          - $ref: '#/components/schemas/LeaseStatusEnum'
+          readOnly: true
+        contract_file:
+          type: string
+          format: uri
+          nullable: true
+        is_signed:
+          type: boolean
+          readOnly: true
+        signed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        terminated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        property:
+          type: integer
+        tenant:
+          type: string
+          format: uuid
+        landlord:
+          type: string
+          format: uuid
+          readOnly: true
+        viewing:
+          type: integer
+          nullable: true
+        application:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+      required:
+      - application
+      - created_at
+      - end_date
+      - id
+      - is_signed
+      - landlord
+      - monthly_rent
+      - property
+      - security_deposit
+      - signed_at
+      - start_date
+      - status
+      - tenant
+      - terminated_at
+    LeaseStatusEnum:
+      enum:
+      - LEASED
+      - ACTIVE
+      - CLOSED
+      type: string
+      description: |-
+        * `LEASED` - Leased
+        * `ACTIVE` - Active
+        * `CLOSED` - Closed
+    ListingPaymentIntent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        landlord_name:
+          type: string
+          readOnly: true
+        plan_name:
+          type: string
+          readOnly: true
+        plan_code:
+          type: string
+          readOnly: true
+        is_featured:
+          type: boolean
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ListingPaymentIntentStatusEnum'
+          readOnly: true
+        payment_reference:
+          type: string
+          maxLength: 150
+        payment_proof:
+          type: string
+          format: uri
+          nullable: true
+        landlord_note:
+          type: string
+        admin_note:
+          type: string
+          readOnly: true
+        reviewed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        property:
+          type: integer
+        landlord:
+          type: string
+          format: uuid
+          readOnly: true
+        plan:
+          type: integer
+        confirmed_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+      required:
+      - admin_note
+      - amount
+      - confirmed_by
+      - created_at
+      - expires_at
+      - id
+      - is_featured
+      - landlord
+      - landlord_name
+      - plan
+      - plan_code
+      - plan_name
+      - property
+      - property_title
+      - reviewed_at
+      - starts_at
+      - status
+    ListingPaymentIntentCreate:
+      type: object
+      properties:
+        property:
+          type: integer
+        plan:
+          type: integer
+        landlord_note:
+          type: string
+      required:
+      - plan
+      - property
+    ListingPaymentIntentRequestConfirmation:
+      type: object
+      properties:
+        payment_reference:
+          type: string
+        payment_proof:
+          type: string
+          format: uri
+        landlord_note:
+          type: string
+    ListingPaymentIntentReview:
+      type: object
+      properties:
+        admin_note:
+          type: string
+    ListingPaymentIntentStatusEnum:
+      enum:
+      - intent_created
+      - pending_confirmation
+      - confirmed
+      - rejected
+      - overridden
+      - expired
+      type: string
+      description: |-
+        * `intent_created` - Intent Created
+        * `pending_confirmation` - Pending Confirmation
+        * `confirmed` - Confirmed
+        * `rejected` - Rejected
+        * `overridden` - Overridden
+        * `expired` - Expired
+    ListingPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          $ref: '#/components/schemas/CodeEnum'
+        name:
+          type: string
+          maxLength: 50
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        duration_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_featured:
+          type: boolean
+        is_active:
+          type: boolean
+      required:
+      - code
+      - id
+      - name
+      - price
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conversation:
+          type: integer
+        sender_id:
+          type: string
+          format: uuid
+          readOnly: true
+        sender_name:
+          type: string
+          readOnly: true
+        sender_role:
+          type: string
+          readOnly: true
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - content
+      - conversation
+      - created_at
+      - id
+      - sender_id
+      - sender_name
+      - sender_role
+    MethodEnum:
+      enum:
+      - MOBILE
+      - CASH
+      - BANK
+      type: string
+      description: |-
+        * `MOBILE` - Mobile Money
+        * `CASH` - Cash
+        * `BANK` - Bank Transfer
+    OpenConversation:
+      type: object
+      properties:
+        application_id:
+          type: string
+          format: uuid
+      required:
+      - application_id
+    PatchedProperty:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyImage'
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PropertyStatusEnum'
+          readOnly: true
+        verification_status:
+          allOf:
+          - $ref: '#/components/schemas/VerificationStatusEnum'
+          readOnly: true
+        ownership_document:
+          type: string
+          format: uri
+          nullable: true
+        verification_notes:
+          type: string
+          readOnly: true
+        verified_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        is_published:
+          type: boolean
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+        verified_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        lease:
+          type: string
+          format: uuid
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        method:
+          $ref: '#/components/schemas/MethodEnum'
+        reference:
+          type: string
+          nullable: true
+          maxLength: 150
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+        invoice:
+          type: string
+          format: uuid
+      required:
+      - amount
+      - created_at
+      - id
+      - invoice
+      - lease
+      - method
+      - paid_at
+      - property_title
+      - status
+      - tenant_name
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        role:
+          type: string
+        is_verified_landlord:
+          type: boolean
+      required:
+      - email
+      - full_name
+      - id
+      - is_verified_landlord
+      - role
+    Property:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyImage'
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PropertyStatusEnum'
+          readOnly: true
+        verification_status:
+          allOf:
+          - $ref: '#/components/schemas/VerificationStatusEnum'
+          readOnly: true
+        ownership_document:
+          type: string
+          format: uri
+          nullable: true
+        verification_notes:
+          type: string
+          readOnly: true
+        verified_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        is_published:
+          type: boolean
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+        verified_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - description
+      - id
+      - images
+      - is_published
+      - location
+      - owner
+      - price
+      - published_at
+      - status
+      - title
+      - verification_notes
+      - verification_status
+      - verified_at
+      - verified_by
+    PropertyImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+        is_cover:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - image
+      - uploaded_at
+    PropertyStatusEnum:
+      enum:
+      - available
+      - rented
+      - unavailable
+      type: string
+      description: |-
+        * `available` - Available
+        * `rented` - Rented
+        * `unavailable` - Unavailable
+    Register:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        full_name:
+          type: string
+          maxLength: 255
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - email
+      - full_name
+      - password
+      - role
+    RentalApplication:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        tenant_email:
+          type: string
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        tenant_profile:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        message:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/RentalApplicationStatusEnum'
+          readOnly: true
+          default: pending
+        landlord_note:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        decided_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        tenant:
+          type: string
+          format: uuid
+          readOnly: true
+        property:
+          type: integer
+      required:
+      - created_at
+      - decided_at
+      - id
+      - landlord_note
+      - property
+      - property_title
+      - status
+      - tenant
+      - tenant_email
+      - tenant_name
+      - tenant_profile
+    RentalApplicationStatusEnum:
+      enum:
+      - pending
+      - approved
+      - rejected
+      - expired
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `approved` - Approved
+        * `rejected` - Rejected
+        * `expired` - Expired
+    RoleEnum:
+      enum:
+      - TENANT
+      - LANDLORD
+      - ADMIN
+      type: string
+      description: |-
+        * `TENANT` - Tenant
+        * `LANDLORD` - Landlord
+        * `ADMIN` - Admin
+    StatusE94Enum:
+      enum:
+      - pending
+      - approved
+      - rejected
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `approved` - Approved
+        * `rejected` - Rejected
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    UserPublic:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        role:
+          type: string
+        is_verified_landlord:
+          type: boolean
+      required:
+      - email
+      - full_name
+      - id
+      - is_verified_landlord
+      - role
+    VerificationStatusEnum:
+      enum:
+      - pending
+      - approved
+      - rejected
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `approved` - Approved
+        * `rejected` - Rejected
+    Viewing:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tenant_name:
+          type: string
+          readOnly: true
+        property_title:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          readOnly: true
+        time_window:
+          type: string
+          readOnly: true
+        scheduled_date:
+          type: string
+          format: date-time
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ViewingStatusEnum'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        property:
+          type: integer
+          readOnly: true
+        application:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - date
+      - id
+      - property
+      - property_title
+      - scheduled_date
+      - status
+      - tenant_name
+      - time_window
+    ViewingStatusEnum:
+      enum:
+      - pending
+      - approved
+      - rejected
+      - completed
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `approved` - Approved
+        * `rejected` - Rejected
+        * `completed` - Completed
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,36 +1,57 @@
-from rest_framework import permissions, viewsets
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from .models import RentalApplication
 from .serializers import RentalApplicationSerializer
 from users.permissions import IsTenant
 
 
-class ApplicationViewSet(viewsets.ModelViewSet):
+@extend_schema_view(
+    list=extend_schema(tags=["Applications - Tenant/Landlord/Admin"]),
+    retrieve=extend_schema(tags=["Applications - Tenant/Landlord/Admin"]),
+    create=extend_schema(tags=["Applications - Tenant"]),
+    by_property=extend_schema(tags=["Applications - Landlord"]),
+    can_message=extend_schema(tags=["Applications - Tenant"]),
+    can_request_viewing=extend_schema(tags=["Applications - Tenant"]),
+    approve=extend_schema(tags=["Applications - Landlord"]),
+    reject=extend_schema(tags=["Applications - Landlord"]),
+    expire=extend_schema(tags=["Applications - Landlord"]),
+    tenant_profile=extend_schema(tags=["Applications - Tenant/Landlord/Admin"]),
+)
+class ApplicationViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = RentalApplicationSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = RentalApplication.objects.select_related("tenant", "property", "property__owner")
 
     def get_queryset(self):
         user = self.request.user
         if user.role == "LANDLORD":
-            queryset = RentalApplication.objects.filter(property__owner=user).select_related("tenant", "property")
+            queryset = self.queryset.filter(property__owner=user)
 
             property_id = self.request.query_params.get("property")
             if property_id:
+                if not queryset.filter(property_id=property_id).exists():
+                    return queryset.none()
                 queryset = queryset.filter(property_id=property_id)
 
             status_value = self.request.query_params.get("status")
             if status_value:
-                statuses = [status.strip().upper() for status in status_value.split(",") if status.strip()]
+                statuses = [status_item.strip().lower() for status_item in status_value.split(",") if status_item.strip()]
                 if statuses:
                     queryset = queryset.filter(status__in=statuses)
 
             return queryset
         if user.role == "ADMIN":
-            return RentalApplication.objects.select_related("tenant", "property")
-        return RentalApplication.objects.filter(tenant=user).select_related("tenant", "property")
+            return self.queryset
+        return self.queryset.filter(tenant=user)
 
     def get_permissions(self):
         if self.action == "create":
@@ -40,53 +61,108 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(tenant=self.request.user)
 
+    @action(detail=False, methods=["GET"], url_path=r"property/(?P<property_id>[^/.]+)")
+    def by_property(self, request, property_id=None):
+        if request.user.role != "LANDLORD":
+            return Response({"error": "Only landlords can access property applications."}, status=status.HTTP_403_FORBIDDEN)
+
+        queryset = self.queryset.filter(property_id=property_id, property__owner=request.user)
+        return Response(self.get_serializer(queryset, many=True).data)
+
+    @action(detail=False, methods=["GET"])
+    def can_message(self, request):
+        if request.user.role != "TENANT":
+            return Response({"error": "Only tenants can check this gate."}, status=status.HTTP_403_FORBIDDEN)
+
+        property_id = request.query_params.get("property_id")
+        if not property_id:
+            return Response({"error": "property_id query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        has_active_application = RentalApplication.objects.filter(
+            tenant=request.user,
+            property_id=property_id,
+            status__in=RentalApplication.ACTIVE_STATUSES,
+        ).exists()
+
+        return Response({"can_message_landlord": has_active_application})
+
+    @action(detail=False, methods=["GET"])
+    def can_request_viewing(self, request):
+        if request.user.role != "TENANT":
+            return Response({"error": "Only tenants can check this gate."}, status=status.HTTP_403_FORBIDDEN)
+
+        property_id = request.query_params.get("property_id")
+        if not property_id:
+            return Response({"error": "property_id query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        has_approved_application = RentalApplication.objects.filter(
+            tenant=request.user,
+            property_id=property_id,
+            status=RentalApplication.Status.APPROVED,
+        ).exists()
+
+        return Response({"can_request_viewing": has_approved_application})
+
+    def _ensure_owner(self, application):
+        if application.property.owner != self.request.user:
+            return Response({"error": "Only the owning landlord can manage this application."}, status=403)
+        return None
+
+    def _transition_application(self, application, target_status, note):
+        if not application.can_transition_to(target_status):
+            return Response(
+                {"error": f"Invalid transition from '{application.status}' to '{target_status}'."},
+                status=400,
+            )
+
+        application.status = target_status
+        application.decided_at = timezone.now()
+        application.landlord_note = note
+        application.save(update_fields=["status", "decided_at", "landlord_note"])
+
+        if target_status in {RentalApplication.Status.REJECTED, RentalApplication.Status.EXPIRED}:
+            application.viewings.filter(status__in=["pending", "approved"]).update(status="rejected")
+
+        return Response({"message": f"Application {target_status}."})
+
     @action(detail=True, methods=["POST"])
     def approve(self, request, pk=None):
         application = self.get_object()
+        owner_error = self._ensure_owner(application)
+        if owner_error:
+            return owner_error
 
-        if application.property.owner != request.user:
-            return Response({"error": "Only landlord can approve"}, status=403)
-        if application.status != "PENDING":
-            return Response({"error": "Only pending applications can be approved"}, status=400)
-
-        application.status = "APPROVED"
-        application.decided_at = timezone.now()
-        application.landlord_note = request.data.get("note", "")
-        application.save(update_fields=["status", "decided_at", "landlord_note"])
-
-        return Response({"message": "Application approved"})
+        return self._transition_application(
+            application,
+            RentalApplication.Status.APPROVED,
+            request.data.get("note", ""),
+        )
 
     @action(detail=True, methods=["POST"])
     def reject(self, request, pk=None):
         application = self.get_object()
+        owner_error = self._ensure_owner(application)
+        if owner_error:
+            return owner_error
 
-        if application.property.owner != request.user:
-            return Response({"error": "Only landlord can reject"}, status=403)
-        if application.status not in {"PENDING", "VIEWING_SCHEDULED"}:
-            return Response({"error": "Only pending or viewing scheduled applications can be rejected"}, status=400)
-
-        application.status = "REJECTED"
-        application.decided_at = timezone.now()
-        application.landlord_note = request.data.get("note", "")
-        application.save(update_fields=["status", "decided_at", "landlord_note"])
-
-        return Response({"message": "Application rejected"})
+        return self._transition_application(
+            application,
+            RentalApplication.Status.REJECTED,
+            request.data.get("note", ""),
+        )
 
     @action(detail=True, methods=["POST"])
-    def accept(self, request, pk=None):
+    def expire(self, request, pk=None):
         application = self.get_object()
+        owner_error = self._ensure_owner(application)
+        if owner_error:
+            return owner_error
 
-        if application.property.owner != request.user:
-            return Response({"error": "Only landlord can accept"}, status=403)
-        if application.status != "VIEWING_SCHEDULED":
-            return Response({"error": "Only viewing scheduled applications can be accepted"}, status=400)
-
-        application.status = "ACCEPTED"
-        application.decided_at = timezone.now()
-        application.landlord_note = request.data.get("note", "")
-        application.save(update_fields=["status", "decided_at", "landlord_note"])
-
-        return Response({"message": "Application accepted"})
+        return self._transition_application(
+            application,
+            RentalApplication.Status.EXPIRED,
+            request.data.get("note", ""),
+        )
 
     @action(detail=True, methods=["GET"], url_path="tenant-profile")
     def tenant_profile(self, request, pk=None):

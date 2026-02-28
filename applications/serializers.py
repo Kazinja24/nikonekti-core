@@ -14,7 +14,6 @@ class RentalApplicationSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["tenant", "status", "decided_at", "landlord_note"]
         extra_kwargs = {
-            "viewing": {"required": False, "allow_null": True},
             "message": {"required": False, "allow_blank": True},
         }
 
@@ -26,17 +25,15 @@ class RentalApplicationSerializer(serializers.ModelSerializer):
         if property_obj.owner == request.user:
             raise serializers.ValidationError("You cannot apply to your own property.")
 
+        if not property_obj.is_published or property_obj.verification_status != "approved":
+            raise serializers.ValidationError("You can only apply to verified and published properties.")
+        if property_obj.status != "available":
+            raise serializers.ValidationError("This property is no longer available for applications.")
+
         has_active_application = RentalApplication.objects.filter(
             tenant=tenant,
             property=property_obj,
-            status__in=[
-                "PENDING",
-                "APPROVED",
-                "VIEWING_SCHEDULED",
-                "ACCEPTED",
-                "LEASED",
-                "ACTIVE",
-            ],
+            status__in=RentalApplication.ACTIVE_STATUSES,
         ).exists()
         if has_active_application:
             raise serializers.ValidationError("You already have an active application for this property.")
@@ -44,16 +41,12 @@ class RentalApplicationSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        # Backward compatibility: ignore explicit null viewing from older frontend payloads.
-        if validated_data.get("viewing") is None:
-            validated_data.pop("viewing", None)
-
         if validated_data.get("message") is None:
             validated_data["message"] = ""
 
         return super().create(validated_data)
 
-    def get_tenant_profile(self, obj):
+    def get_tenant_profile(self, obj) -> dict:
         tenant = obj.tenant
         return {
             "id": str(tenant.id),

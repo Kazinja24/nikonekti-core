@@ -17,39 +17,60 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
-from users.views import LoginView
+from users.views import LoginView, RegisterView, ProfileView
+from properties.views import PropertyViewSet
+from viewings.views import ViewingViewSet
+from leases.views import LeaseViewSet
+from payments.views import PaymentViewSet
+from verification.views import LandlordVerificationViewSet
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+router = DefaultRouter()
+router.register(r'properties', PropertyViewSet, basename='properties')
+router.register(r'viewings', ViewingViewSet, basename='viewings')
+router.register(r'leases', LeaseViewSet, basename='leases')
+router.register(r'payments', PaymentViewSet, basename='payments')
+router.register(r'landlord-verifications', LandlordVerificationViewSet, basename='landlord-verifications')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('users/', include('users.urls')),
+    path('api/users/', include('users.urls')),
+    path('api/applications/', include('applications.urls')),
+    path('api/offers/', include('offers.urls')),
+    path('api/payments/', include('payments.urls')),
+    path('api/audit/', include('audit.urls')),
+    path('api/chat/', include('messages.urls')),
+    path('api/reports/', include('reports.urls')),
+
+
 
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view()),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema')),
 
 
     path('api/login/', LoginView.as_view(), name='login'),
+    path('api/auth/login/', LoginView.as_view(), name='auth-login'),
+    path('api/auth/register/', RegisterView.as_view(), name='auth-register'),
+    path('api/auth/profile/', ProfileView.as_view(), name='auth-profile'),
     path('login/', LoginView.as_view()),
+    path('api/', include(router.urls)),
 
 ]
 
-
-
-from rest_framework.routers import DefaultRouter
-from properties.views import PropertyViewSet
-from viewings.views import ViewingViewSet
-
-router = DefaultRouter()
-router.register(r'properties', PropertyViewSet)
-router.register(r'viewings', ViewingViewSet)
-
-urlpatterns += router.urls
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

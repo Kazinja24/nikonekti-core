@@ -27,6 +27,7 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
             "full_name": self.user.full_name,
             "email": self.user.email,
             "role": self.user.role,
+            "is_verified_landlord": self.user.is_verified_landlord,
         }
 
         return data
